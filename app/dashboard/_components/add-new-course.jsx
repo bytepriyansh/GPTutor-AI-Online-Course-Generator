@@ -3,31 +3,63 @@
 import { Button } from '@/components/ui/button';
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
-import React from 'react';
+import React, { useContext } from 'react';
+import { Plus, Zap } from 'lucide-react';
+import { UserCourseListContext } from '@/app/_contexts/UserCourseListContext';
 
 const AddNewCourse = () => {
     const { user } = useUser();
+    const { userCourseList } = useContext(UserCourseListContext);
+    const hasReachedLimit = userCourseList?.length > 5;
 
     return (
-        <section className="max-w-4xl mx-auto mt-3 px-6 py-12 bg-gradient-to-r from-purple-800 via-pink-700 to-purple-900 rounded-3xl shadow-lg text-white">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <div>
-                    <h2 className="text-4xl font-extrabold tracking-tight mb-2">
-                        Welcome{' '}
-                        <span className="bg-gradient-to-r from-pink-400 via-purple-200 to-pink-300 bg-clip-text text-transparent">
-                            {user?.fullName || 'Guest'}
-                        </span>
-                        !
+        <section className="max-w-5xl mx-auto mt-6 px-8 py-10 bg-gray-950 rounded-xl border border-gray-800 shadow-lg">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+                <div className="space-y-3">
+                    <h2 className="text-3xl md:text-4xl font-bold text-white">
+                        Welcome, <span className="text-purple-400">{user?.fullName || 'Guest'}</span>
                     </h2>
-                    <p className="text-lg text-purple-200 max-w-xl">
-                        Ready to create your next amazing AI-powered course? Let's get started and empower learners worldwide.
+                    <p className="text-gray-400 text-lg max-w-xl">
+                        {hasReachedLimit ? (
+                            "Upgrade to create more courses"
+                        ) : (
+                            "Ready to create your next AI-powered masterpiece?"
+                        )}
                     </p>
+                    {hasReachedLimit && (
+                        <p className="text-sm text-purple-300">
+                            You've reached your free tier limit (5 courses)
+                        </p>
+                    )}
                 </div>
                 <div>
-                    <Link href={"/create-course"}>
-                    <Button className="uppercase cursor-pointer px-8 py-4 text-lg font-bold tracking-wider">
-                        + Create AI Course
-                    </Button>
+                    <Link href={hasReachedLimit ? "/billing" : "/create-course"}>
+                        <Button
+                            className={`px-10 py-5 text-md font-semibold tracking-wide
+                                ${hasReachedLimit ?
+                                    "bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-700 hover:to-yellow-500 border border-yellow-400 shadow-md shadow-yellow-900/30 hover:shadow-yellow-400" :
+                                    "bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 border border-purple-400 shadow-md shadow-purple-900/30 hover:shadow-purple-400"
+                                }
+                                transition-all cursor-pointer group`}
+                        >
+                            {hasReachedLimit ? (
+                                <>
+                                    <Zap className="mr-3 h-5 w-5 transition-transform group-hover:scale-110" />
+                                    <span className="relative">
+                                        Upgrade Now
+                                        <span className="absolute bottom-0 left-0 w-full h-px bg-white/50 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                                    </span>
+                                </>
+                            ) : (
+                                <>
+                                    <Plus className="mr-3 h-5 w-5 transition-transform group-hover:rotate-90" />
+                                    <span className="relative">
+                                        Create Course
+                                        <span className="absolute bottom-0 left-0 w-full h-px bg-white/50 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                                    </span>
+                                </>
+                            )}
+                        </Button>
                     </Link>
                 </div>
             </div>

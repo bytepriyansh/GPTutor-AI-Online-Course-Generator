@@ -3,9 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./mode-toggle";
 import Link from "next/link";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 const Header = () => {
+
+    const {user}=useUser()
+
     return (
         <header className="w-full border-b shadow-md shadow-white bg-background sticky top-0 z-50">
             <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,11 +22,12 @@ const Header = () => {
 
                     <div className="flex items-center space-x-4">
                         <ModeToggle />
-                        <Link href="/dashboard">
+                        {user && <Link href="/dashboard">
                             <Button variant="outline" className="hover:bg-gray-400 cursor-pointer transition-all">
-                               Dashboard
+                                Dashboard
                             </Button>
-                        </Link>
+                        </Link>}
+                        
                         <SignedOut>
                             <SignInButton>
                                 <Button variant="default" className=" cursor-pointer hover:bg-gray-400 transition-all">

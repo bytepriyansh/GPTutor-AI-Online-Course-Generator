@@ -6,7 +6,6 @@ import { dark } from "@clerk/themes";
 import { Toaster } from "react-hot-toast";
 
 const cabin = Cabin({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
@@ -14,6 +13,9 @@ const cabin = Cabin({
 export const metadata = {
   title: "GPTutor",
   description: "An AI-Based Online Course Generator",
+  icons: {
+    icon: "/fav.webp"
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -22,19 +24,19 @@ export default function RootLayout({ children }) {
       baseTheme: dark
     }}>
       <html lang="en" suppressHydrationWarning>
-          <body
-            className={`${cabin.className}`}
+        <body
+          className={`${cabin.className}`}
+        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
             <Toaster position="top-center" />
-              {children}
-            </ThemeProvider>
-          </body>
+            {children}
+          </ThemeProvider>
+        </body>
       </html>
     </ClerkProvider>
   );
